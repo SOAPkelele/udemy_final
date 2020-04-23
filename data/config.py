@@ -9,6 +9,8 @@ admins = [
     362089194,
 ]
 
+channels = ["@Testingchannel1010", "-1001433772597"]
+
 ip = os.getenv("ip")
 
 aiogram_redis = {

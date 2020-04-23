@@ -1,12 +1,11 @@
 from aiogram import types
 from aiogram.dispatcher.filters import Command
-from keyboards.inline.subscription import check_button
-from utils.misc import subscription
+
+from data.config import channels
 from filters import IsForwarded
-
+from keyboards.inline.subscription import check_button
 from loader import bot, dp
-
-channels = ["@Testingchannel1010", "-1001433772597"]
+from utils.misc import subscription
 
 
 @dp.message_handler(IsForwarded(), content_types=types.ContentType.ANY)
