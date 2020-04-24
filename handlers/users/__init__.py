@@ -1,4 +1,5 @@
 from .help import dp
+from .sending_cats import dp
 from .start import dp
 from .echo import dp
 
