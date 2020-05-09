@@ -20,7 +20,7 @@ Tesla_X = Item(
 Tesla Model X разрабатывается на базе платформы Tesla Model S \
 и собирается на основном заводе компании во Фримонте, штат Калифорния.
 """,
-    price=10_00_000_000,
+    price=1_000_000,
     photo_link="https://www.tesla.com/sites/tesla/files/curatedmedia/performance-hero%402.jpg"
 )
 
@@ -31,7 +31,7 @@ Tesla_S = Item(
 <b>Tesla Model S</b> — пятидверный электромобиль производства американской компании Tesla. 
 Прототип был впервые показан на Франкфуртском автосалоне в 2009 году; поставки автомобиля в США начались в июне 2012 года
 """,
-    price=8_00_000_000,
+    price=80_000_00,
     photo_link="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/tesla-model-s-1563301327.jpg"
 )
 

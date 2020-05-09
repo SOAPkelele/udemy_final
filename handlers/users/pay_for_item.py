@@ -51,15 +51,13 @@ async def create_invoice(call: types.CallbackQuery, state: FSMContext):
     await call.message.answer(f"Оплатите {show_amount:.8f} по адресу:\n\n" +
                               hcode(config.WALLET_BTC),
                               reply_markup=paid_keyboard)
-    qr_code = config.REQUEST_LINK.format(address=config.WALLET_BTC,
-                                         amount=show_amount,
-                                         message="test")
-    await call.message.answer_photo(photo=qr_link(qr_code))
-    await state.set_state("btc")
+
+    # await call.message.answer_photo(photo=qr_link(qr_code))
+    await state.set_state("qiwi")
     await state.update_data(payment=payment)
 
 
-@dp.callback_query_handler(text="cancel", state="btc")
+@dp.callback_query_handler(text="cancel", state="qiwi")
 async def cancel_payment(call: types.CallbackQuery, state: FSMContext):
     await call.message.edit_text("Отменено")
     await state.finish()

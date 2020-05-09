@@ -5,12 +5,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BOT_TOKEN = str(os.getenv("BOT_TOKEN"))
-BLOCKCYPHER_TOKEN = os.getenv("BLOCKCYPHER")
-WALLET_BTC = os.getenv("wallet")
-REQUEST_LINK = "bitcoin:{address}?" \
-               "amount={amount}" \
-               "&label={message}"
-
+QIWI_TOKEN = os.getenv("qiwi")
+WALLET_QIWI = os.getenv("wallet")
 admins = [
     362089194
 ]
