@@ -3,12 +3,12 @@ from random import randint
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Command
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.markdown import hcode
 from blockcypher import from_satoshis
 
 from data import config
 from data.items import items
+from keyboards.inline.purchases import buy_keyboard, paid_keyboard
 from loader import dp
 from utils.misc.bitcoin_payments import Payment, NotConfirmed, NoPaymentFound
 from utils.misc.qr_code import qr_link
@@ -25,13 +25,6 @@ async def show_items(message: types.Message):
 """
 
     for item in items:
-        keyboard = InlineKeyboardMarkup(
-            inline_keyboard=[
-                [
-                    InlineKeyboardButton(text="Купить", callback_data=f"buy:{item.id}")
-                ]
-            ]
-        )
         await message.answer_photo(
             photo=item.photo_link,
             caption=caption.format(
@@ -39,7 +32,7 @@ async def show_items(message: types.Message):
                 description=item.description,
                 price=item.price
             ),
-            reply_markup=keyboard
+            reply_markup=buy_keyboard(item_id=item.id)
         )
 
 
@@ -54,24 +47,10 @@ async def create_invoice(call: types.CallbackQuery, state: FSMContext):
     payment = Payment(amount=amount)
     payment.create()
 
-    keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    text="Оплатил",
-                    callback_data="paid")
-            ],
-            [
-                InlineKeyboardButton(
-                    text="Отмена",
-                    callback_data="cancel")
-            ],
-        ]
-    )
     show_amount = from_satoshis(payment.amount, "btc")
     await call.message.answer(f"Оплатите {show_amount:.8f} по адресу:\n\n" +
                               hcode(config.WALLET_BTC),
-                              reply_markup=keyboard)
+                              reply_markup=paid_keyboard)
     qr_code = config.REQUEST_LINK.format(address=config.WALLET_BTC,
                                          amount=show_amount,
                                          message="test")
