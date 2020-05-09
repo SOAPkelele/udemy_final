@@ -1,17 +1,13 @@
-from random import randint
-
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Command
 from aiogram.utils.markdown import hcode
-from blockcypher import from_satoshis
 
 from data import config
 from data.items import items
 from keyboards.inline.purchases import buy_keyboard, paid_keyboard
 from loader import dp
-from utils.misc.bitcoin_payments import Payment, NotConfirmed, NoPaymentFound
-from utils.misc.qr_code import qr_link
+from utils.misc.qiwi import Payment, NoPaymentFound, NotEnoughMoney
 
 
 @dp.message_handler(Command("items"))
@@ -21,7 +17,7 @@ async def show_items(message: types.Message):
 <i>Описание:</i>
 {description}
 
-<u>Цена:</u> {price:.8f} <b>BTC</b>
+<u>Цена:</u> {price:.2f} <b>RUB</b>
 """
 
     for item in items:
@@ -30,7 +26,7 @@ async def show_items(message: types.Message):
             caption=caption.format(
                 title=item.title,
                 description=item.description,
-                price=item.price
+                price=item.price,
             ),
             reply_markup=buy_keyboard(item_id=item.id)
         )
@@ -47,33 +43,38 @@ async def create_invoice(call: types.CallbackQuery, state: FSMContext):
     payment = Payment(amount=amount)
     payment.create()
 
-    await call.message.answer(f"Оплатите {amount:.2f} по адресу:\n\n" +
-                              hcode(config.WALLET_QIWI),
-                              reply_markup=paid_keyboard)
+    await call.message.answer(
+        "\n".join([
+            f"Оплатите не менее {amount:.2f} по адресу:",
+            "",
+            hcode(config.WALLET_QIWI),
+            "И обязательно укажите ID платежа:",
+            hcode(payment.id)
+        ]),
+        reply_markup=paid_keyboard)
 
     await state.set_state("qiwi")
     await state.update_data(payment=payment)
 
+    @dp.callback_query_handler(text="cancel", state="qiwi")
+    async def cancel_payment(call: types.CallbackQuery, state: FSMContext):
+        await call.message.edit_text("Отменено")
+        await state.finish()
 
-@dp.callback_query_handler(text="cancel", state="qiwi")
-async def cancel_payment(call: types.CallbackQuery, state: FSMContext):
-    await call.message.edit_text("Отменено")
-    await state.finish()
+    @dp.callback_query_handler(text="paid", state="qiwi")
+    async def approve_payment(call: types.CallbackQuery, state: FSMContext):
+        data = await state.get_data()
+        payment: Payment = data.get("payment")
+        try:
+            payment.check_payment()
+        except NoPaymentFound:
+            await call.message.answer("Транзакция не найдена.")
+            return
+        except NotEnoughMoney:
+            await call.message.answer("Оплаченная сума меньше необходимой.")
+            return
 
-
-@dp.callback_query_handler(text="paid", state="qiwi")
-async def approve_payment(call: types.CallbackQuery, state: FSMContext):
-    data = await state.get_data()
-    payment: Payment = data.get("payment")
-    try:
-        payment.check_payment()
-    except NotConfirmed:
-        await call.message.answer("Транзакция найдена. Но еще не подтверждена. Попробуйте позже")
-        return
-    except NoPaymentFound:
-        await call.message.answer("Транзакция не найдена.")
-        return
-    else:
-        await call.message.answer("Успешно оплачено")
-    await call.message.edit_reply_markup()
-    await state.finish()
+        else:
+            await call.message.answer("Успешно оплачено")
+        await call.message.edit_reply_markup()
+        await state.finish()

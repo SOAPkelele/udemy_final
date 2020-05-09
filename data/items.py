@@ -20,7 +20,7 @@ Tesla_X = Item(
 Tesla Model X разрабатывается на базе платформы Tesla Model S \
 и собирается на основном заводе компании во Фримонте, штат Калифорния.
 """,
-    price=1_000_000,
+    price=1,
     photo_link="https://www.tesla.com/sites/tesla/files/curatedmedia/performance-hero%402.jpg"
 )
 
