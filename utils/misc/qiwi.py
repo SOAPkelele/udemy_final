@@ -1,10 +1,11 @@
+import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 
 import pyqiwi
 
+from data import config
 from data.config import QIWI_TOKEN, WALLET_QIWI
-import uuid
 
 wallet = pyqiwi.Wallet(token=QIWI_TOKEN, number=WALLET_QIWI)
 
@@ -37,3 +38,8 @@ class Payment:
 
         else:
             raise NoPaymentFound
+
+    @property
+    def invoice(self):
+        link = "https://oplata.qiwi.com/create?publicKey={pubkey}&amount={amount}&comment={comment}"
+        return link.format(pubkey=config.QIWI_PUBKEY, amount=self.amount, comment=self.id)

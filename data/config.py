@@ -7,6 +7,7 @@ load_dotenv()
 BOT_TOKEN = str(os.getenv("BOT_TOKEN"))
 QIWI_TOKEN = os.getenv("qiwi")
 WALLET_QIWI = os.getenv("wallet")
+QIWI_PUBKEY = os.getenv("qiwi_p_pub")
 admins = [
     362089194
 ]

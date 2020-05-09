@@ -1,7 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Command
-from aiogram.utils.markdown import hcode
+from aiogram.utils.markdown import hcode, hlink
 
 from data import config
 from data.items import items
@@ -45,9 +45,9 @@ async def create_invoice(call: types.CallbackQuery, state: FSMContext):
 
     await call.message.answer(
         "\n".join([
-            f"Оплатите не менее {amount:.2f} по адресу:",
+            f"Оплатите не менее {amount:.2f} по номеру телефона или по адресу",
             "",
-            hcode(config.WALLET_QIWI),
+            hlink(config.WALLET_QIWI, url=payment.invoice),
             "И обязательно укажите ID платежа:",
             hcode(payment.id)
         ]),
