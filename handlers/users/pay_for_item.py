@@ -43,16 +43,14 @@ async def create_invoice(call: types.CallbackQuery, state: FSMContext):
     item_id = int(item_id) - 1
     item = items[item_id]
 
-    amount = item.price + randint(5, 500)
+    amount = item.price
     payment = Payment(amount=amount)
     payment.create()
 
-    show_amount = from_satoshis(payment.amount, "btc")
-    await call.message.answer(f"Оплатите {show_amount:.8f} по адресу:\n\n" +
-                              hcode(config.WALLET_BTC),
+    await call.message.answer(f"Оплатите {amount:.2f} по адресу:\n\n" +
+                              hcode(config.WALLET_QIWI),
                               reply_markup=paid_keyboard)
 
-    # await call.message.answer_photo(photo=qr_link(qr_code))
     await state.set_state("qiwi")
     await state.update_data(payment=payment)
 
@@ -63,7 +61,7 @@ async def cancel_payment(call: types.CallbackQuery, state: FSMContext):
     await state.finish()
 
 
-@dp.callback_query_handler(text="paid", state="btc")
+@dp.callback_query_handler(text="paid", state="qiwi")
 async def approve_payment(call: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
     payment: Payment = data.get("payment")
