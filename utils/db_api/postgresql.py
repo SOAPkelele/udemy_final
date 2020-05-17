@@ -42,7 +42,7 @@ class Database:
         sql = f"""
         SELECT * FROM Users WHERE {parameters}
         """
-        return self.execute(sql, parameters=tuple(kwargs.values()), fetchone=True)
+        return self.pool.fetchval(sql, parameters=tuple(kwargs.values()))
 
     def count_users(self):
         return self.execute("SELECT COUNT(*) FROM Users;", fetchone=True)
