@@ -64,28 +64,3 @@ class Database:
 
     async def delete_users(self):
         await self.pool.execute("DELETE FROM Users WHERE TRUE")
-
-
-if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    db = Database(loop)
-    print("Создаем таблицу Пользователей...")
-    loop.run_until_complete(db.create_table_users())
-    print("Готово")
-
-    print("Добавляем пользователей")
-    tasks = asyncio.gather(
-        db.add_user(1, "One", "email"),
-        db.add_user(2, "Vasya", "vv@gmail.com"),
-        db.add_user(3, "1", "1"),
-        db.add_user(4, "1", "1"),
-        db.add_user(5, "John", "john@mail.com"),
-    )
-    loop.run_until_complete(tasks)
-    print("Готово")
-
-    users = loop.run_until_complete(db.select_all_users())
-    print(f"Получил всех пользователей: {users}")
-
-    user = loop.run_until_complete(db.select_user(Name="John", id=5))
-    print(f"Получил пользователя: {user}")
