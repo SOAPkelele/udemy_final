@@ -1,81 +1,91 @@
+import asyncio
+
 import asyncpg
 from data import config
 
 
 class Database:
-    def __init__(self):
-        self.pool: asyncpg.pool.Pool = await asyncpg.create_pool(user=config.PGUSER,
-                                                                 password=config.PGPASSWORD,
-                                                                 host=config.ip)
+    def __init__(self, loop: asyncio.AbstractEventLoop):
+        self.pool: asyncpg.pool.Pool = loop.run_until_complete(
+            asyncpg.create_pool(user=config.PGUSER,
+                                password=config.PGPASSWORD,
+                                host=config.ip))
 
-    def create_table_users(self):
+    async def create_table_users(self):
         sql = """
-        CREATE TABLE Users (
-            id int NOT NULL,
+        CREATE TABLE IF NOT EXISTS Users (
+            id INT NOT NULL,
             Name varchar(255) NOT NULL,
             email varchar(255),
             PRIMARY KEY (id)
             );
 """
-        self.pool.execute(sql)
+        await self.pool.execute(sql)
 
-    def add_user(self, id: int, name: str, email: str = None):
+    @staticmethod
+    def format_args(sql, parameters: dict):
+        sql += " AND ".join([
+            f"{item} = ${num + 1}" for num, item in enumerate(parameters)
+        ])
+        return sql, tuple(parameters.values())
+
+    async def add_user(self, id: int, name: str, email: str = None):
         # SQL_EXAMPLE = "INSERT INTO Users(id, Name, email) VALUES(1, 'John', 'John@gmail.com')"
 
         sql = """
-        INSERT INTO Users(id, Name, email) VALUES(?, ?, ?)
+        INSERT INTO Users(id, Name, email) VALUES($1, $2, $3)
         """
-        self.pool.execute(sql, id, name, email)
+        await self.pool.execute(sql, id, name, email)
 
-    def select_all_users(self):
+    async def select_all_users(self):
         sql = """
         SELECT * FROM Users
         """
-        return self.pool.fetchval(sql)
+        return await self.pool.fetch(sql)
 
-    def select_user(self, **kwargs):
+    async def select_user(self, **kwargs):
         # SQL_EXAMPLE = "SELECT * FROM Users where id=1 AND Name='John'"
-
-        parameters = " AND ".join([
-            f"{item} = ?" for item in kwargs
-        ])
         sql = f"""
-        SELECT * FROM Users WHERE {parameters}
+        SELECT * FROM Users WHERE 
         """
-        return self.pool.fetchval(sql, parameters=tuple(kwargs.values()))
+        sql, parameters = self.format_args(sql, parameters=kwargs)
+        return await self.pool.fetchrow(sql, *parameters)
 
-    def count_users(self):
-        return self.execute("SELECT COUNT(*) FROM Users;", fetchone=True)
+    async def count_users(self):
+        return await self.pool.fetchval("SELECT COUNT(*) FROM Users")
 
-    def update_user_email(self, email, id, **kwargs):
+    async def update_user_email(self, email, id):
         # SQL_EXAMPLE = "UPDATE Users SET email=mail@gmail.com WHERE id=12345"
 
         sql = f"""
-        UPDATE Users SET email=? WHERE id=?
+        UPDATE Users SET email=$1 WHERE id=$2
         """
-        return self.execute(sql, parameters=(email, id), commit=True)
+        return await self.pool.execute(sql, email, id)
 
-    def count_users(self):
-        return self.execute("SELECT COUNT(*) FROM Users;", fetchone=True)
-
-    def delete_users(self):
-        self.execute("DELETE FROM Users WHERE TRUE", commit=True)
+    async def delete_users(self):
+        await self.pool.execute("DELETE FROM Users WHERE TRUE")
 
 
 if __name__ == '__main__':
-    db = Database()
-    # db.create_table_users()
-    # db.add_user(1, "One", "email")
-    # db.add_user(2, "Vasya", "vv@gmail.com")
-    # db.add_user(3, 1, 1)
-    # db.add_user(4, 1, 1)
-    # db.add_user(5, "John", "john@mail.com")
+    loop = asyncio.get_event_loop()
+    db = Database(loop)
+    print("Создаем таблицу Пользователей...")
+    loop.run_until_complete(db.create_table_users())
+    print("Готово")
 
-    users = db.select_all_users()
+    print("Добавляем пользователей")
+    tasks = asyncio.gather(
+        db.add_user(1, "One", "email"),
+        db.add_user(2, "Vasya", "vv@gmail.com"),
+        db.add_user(3, "1", "1"),
+        db.add_user(4, "1", "1"),
+        db.add_user(5, "John", "john@mail.com"),
+    )
+    loop.run_until_complete(tasks)
+    print("Готово")
+
+    users = loop.run_until_complete(db.select_all_users())
     print(f"Получил всех пользователей: {users}")
 
-    user = db.select_user(Name="John", id=5)
+    user = loop.run_until_complete(db.select_user(Name="John", id=5))
     print(f"Получил пользователя: {user}")
-
-    users = db.select_all_users()
-    print(f"Получил всех пользователей: {users}")

@@ -1,6 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.builtin import Command
+from aiogram.utils.markdown import hcode
 
 from loader import dp, db
 
@@ -14,7 +15,10 @@ async def bot_start(message: types.Message, state: FSMContext):
 @dp.message_handler(state="email")
 async def enter_email(message: types.Message, state: FSMContext):
     email = message.text
-    db.update_user_email(email=email, id=message.from_user.id)
-    user = db.select_user(id=message.from_user.id)
-    await message.answer(f"Данные обновлены. Запись в БД: {user}")
+    await db.update_user_email(email=email, id=message.from_user.id)
+    user = await db.select_user(id=message.from_user.id)
+    await message.answer("Данные обновлены. Запись в БД: \n" +
+                         hcode("id={id}\n"
+                               "name={name}\n"
+                               "email={email}".format(**user)))
     await state.finish()
