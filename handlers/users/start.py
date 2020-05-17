@@ -3,14 +3,15 @@ import sqlite3
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import CommandStart
 
-from loader import dp, db
+from loader import dp
+from utils.db_api import quick_commands as db
 
 
 @dp.message_handler(CommandStart())
 async def bot_start(message: types.Message):
     name = message.from_user.full_name
     await db.add_user(id=message.from_user.id,
-                      name=name)
+                                  name=name)
 
     count = await db.count_users()
     await message.answer(

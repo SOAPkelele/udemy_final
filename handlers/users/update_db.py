@@ -3,7 +3,8 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.builtin import Command
 from aiogram.utils.markdown import hcode
 
-from loader import dp, db
+from loader import dp
+from utils.db_api import quick_commands as db
 
 
 @dp.message_handler(Command("email"))
@@ -18,7 +19,7 @@ async def enter_email(message: types.Message, state: FSMContext):
     await db.update_user_email(email=email, id=message.from_user.id)
     user = await db.select_user(id=message.from_user.id)
     await message.answer("Данные обновлены. Запись в БД: \n" +
-                         hcode("id={id}\n"
-                               "name={name}\n"
-                               "email={email}".format(**user)))
+                         hcode(f"id={user.id}\n"
+                               f"name={user.name}\n"
+                               f"email={user.email}"))
     await state.finish()

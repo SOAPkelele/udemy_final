@@ -21,3 +21,5 @@ redis = {
     'address': (ip, 6379),
     'encoding': 'utf8'
 }
+
+POSTGRES_URI = f"postgresql://{PGUSER}:{PGPASSWORD}@{ip}/postgres"
