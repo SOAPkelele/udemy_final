@@ -38,6 +38,13 @@ class Database:
 """
         self.execute(sql, commit=True)
 
+    @staticmethod
+    def format_args(sql, parameters: dict):
+        sql += " AND ".join([
+            f"{item} = ?" for item in parameters
+        ])
+        return sql, tuple(parameters.values())
+
     def add_user(self, id: int, name: str, email: str = None):
         # SQL_EXAMPLE = "INSERT INTO Users(id, Name, email) VALUES(1, 'John', 'John@gmail.com')"
 
@@ -54,19 +61,15 @@ class Database:
 
     def select_user(self, **kwargs):
         # SQL_EXAMPLE = "SELECT * FROM Users where id=1 AND Name='John'"
+        sql = "SELECT * FROM Users WHERE "
+        sql, parameters = self.format_args(sql, kwargs)
 
-        parameters = " AND ".join([
-            f"{item} = ?" for item in kwargs
-        ])
-        sql = f"""
-        SELECT * FROM Users WHERE {parameters}
-        """
-        return self.execute(sql, parameters=tuple(kwargs.values()), fetchone=True)
+        return self.execute(sql, parameters=parameters, fetchone=True)
 
     def count_users(self):
         return self.execute("SELECT COUNT(*) FROM Users;", fetchone=True)
 
-    def update_user_email(self, email, id, **kwargs):
+    def update_user_email(self, email, id):
         # SQL_EXAMPLE = "UPDATE Users SET email=mail@gmail.com WHERE id=12345"
 
         sql = f"""
@@ -75,7 +78,7 @@ class Database:
         return self.execute(sql, parameters=(email, id), commit=True)
 
     def count_users(self):
-        return self.execute("SELECT COUNT(*) FROM Users;", fetchone=True)
+        return self.execute("SELECT COUNT(*) FROM Users", fetchone=True)
 
     def delete_users(self):
         self.execute("DELETE FROM Users WHERE TRUE", commit=True)
