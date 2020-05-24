@@ -4,9 +4,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-BOT_TOKEN = str(os.getenv("BOT_TOKEN"))
-PGUSER = str(os.getenv("PGUSER"))
-PGPASSWORD = str(os.getenv("PGPASSWORD"))
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+PGUSER = os.getenv("PGUSER")
+PGPASSWORD = os.getenv("PGPASSWORD")
+DATABASE = os.getenv("DATABASE")
 admins = [
     362089194
 ]
@@ -22,4 +23,4 @@ redis = {
     'encoding': 'utf8'
 }
 
-POSTGRES_URI = f"postgresql://{PGUSER}:{PGPASSWORD}@{ip}/postgres"
+POSTGRES_URI = f"postgres://{PGUSER}:{PGPASSWORD}@{ip}/{DATABASE}"

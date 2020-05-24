@@ -1,34 +1,32 @@
-from asyncpg import UniqueViolationError
+from tortoise.exceptions import IntegrityError
 
 from utils.db_api.schemas.user import User
-from utils.db_api.db_gino import db
 
 
 async def add_user(id: int, name: str, email: str = None):
     try:
-        return await User(id=id, name=name, email=email).create()
-    except UniqueViolationError:
+        return await User.create(id=id, name=name, email=email)
+    except IntegrityError:
         pass
 
 
 async def select_all_users():
-    return await User.query.gino.all()
+    return await User.all().values()
 
 
 async def select_user(id):
-    user = await User.query.where(User.id == id).gino.first()
-    return user
+    user = await User.get_or_none(id=id).values()
+    return user[0]
 
 
 async def count_users():
-    total = await db.func.count(User.id).gino.scalar()
+    total = await User.all().count()
     return total
 
 
 async def update_user_email(id, email):
-    user = await User.get(id)
-    await user.update(email=email).apply()
+    await User.filter(id=id).update(email=email)
 
 
-async def delete_users(self):
-    await self.db.drop_all(tables="Users")
+async def clean_tables():
+    await User.all().delete()

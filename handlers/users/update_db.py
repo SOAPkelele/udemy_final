@@ -19,7 +19,7 @@ async def enter_email(message: types.Message, state: FSMContext):
     await db.update_user_email(email=email, id=message.from_user.id)
     user = await db.select_user(id=message.from_user.id)
     await message.answer("Данные обновлены. Запись в БД: \n" +
-                         hcode(f"id={user.id}\n"
-                               f"name={user.name}\n"
-                               f"email={user.email}"))
+                         hcode("id={id}\n"
+                               "name={name}\n"
+                               "email={email}".format(**user)))
     await state.finish()
