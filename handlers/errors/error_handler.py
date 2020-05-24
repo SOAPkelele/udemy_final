@@ -25,11 +25,11 @@ async def errors_handler(update, exception):
         logging.debug('Message is not modified')
         return True
     if isinstance(exception, MessageCantBeDeleted):
-        logging.debug('Message cant be deleted')
+        logging.info('Message cant be deleted')
         return True
 
     if isinstance(exception, MessageToDeleteNotFound):
-        logging.debug('Message to delete not found')
+        logging.info('Message to delete not found')
         return True
 
     if isinstance(exception, MessageTextIsEmpty):
