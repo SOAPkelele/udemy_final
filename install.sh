@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # Устанавливаем supervisorctl
 apt-get update &&\
-sudo apt-get install python3 &&\
 apt-get install supervisor -y &&\
 # Создаем директорию telegrambot в /home
 mkdir -p /home/telegrambot &&\
