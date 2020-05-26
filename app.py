@@ -1,7 +1,10 @@
+from data.config import WEBHOOK_URL, WEBHOOK_PATH, WEBAPP_HOST, WEBAPP_PORT, SSL_CERTIFICATE
 from utils.set_bot_commands import set_default_commands
 
 
 async def on_startup(dp):
+    await dp.bot.set_webhook(url=WEBHOOK_URL, certificate=SSL_CERTIFICATE)
+
     import filters
     import middlewares
     filters.setup(dp)
@@ -13,7 +16,16 @@ async def on_startup(dp):
 
 
 if __name__ == '__main__':
-    from aiogram import executor
+    from aiogram.utils.executor import start_webhook
+
     from handlers import dp
 
-    executor.start_polling(dp, on_startup=on_startup)
+    start_webhook(
+        dispatcher=dp,
+        webhook_path=WEBHOOK_PATH,
+        on_startup=on_startup,
+        skip_updates=True,
+        host=WEBAPP_HOST,
+        port=WEBAPP_PORT,
+        ssl_context=SSL_CERTIFICATE
+    )
