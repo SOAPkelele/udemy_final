@@ -1,20 +1,20 @@
 version: '3.1'
 
 services:
-  db:
-    container_name: database
-    image: sameersbn/postgresql:10-2
-    environment:
-      POSTGRES_DB: $DB_NAME
-      POSTGRES_PASSWORD: $DB_PASS
-    restart: always
-    ports:
-      - 5432:5432
-    networks:
-      - botnet
-    volumes:
-      - ./pgdata:/var/lib/postgresql/data
-
+# Если хотите подключить базу данных
+#  db:
+#    container_name: database
+#    image: sameersbn/postgresql:10-2
+#    environment:
+#      PG_PASSWORD: $PGPASSWORD
+#    restart: always
+#    ports:
+#      - 5432:5432
+#    networks:
+#      - botnet
+#    volumes:
+#      - ./pgdata:/var/lib/postgresql/data
+#
   tgbot:
     container_name: bot
     build:
@@ -25,9 +25,9 @@ services:
     restart: always
     env_file:
       - ".env"
-    # bot start after load db
-    depends_on:
-      - db
+    # Бот стартует после запуска базы
+#    depends_on:
+#      - db
 
 # указываются используемые сети
 networks:
