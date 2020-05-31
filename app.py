@@ -1,10 +1,15 @@
-from data.config import WEBHOOK_URL, WEBHOOK_PATH, WEBAPP_HOST, WEBAPP_PORT, SSL_CERTIFICATE
+from aiogram.utils.executor import start_webhook
+
+from data.config import WEBHOOK_URL, WEBHOOK_PATH, WEBAPP_HOST, WEBAPP_PORT
+from loader import SSL_CERTIFICATE, ssl_context, bot
 from utils.set_bot_commands import set_default_commands
 
 
 async def on_startup(dp):
-    await dp.bot.set_webhook(url=WEBHOOK_URL, certificate=SSL_CERTIFICATE)
-
+    await bot.set_webhook(
+        url=WEBHOOK_URL,
+        certificate=SSL_CERTIFICATE
+    )
     import filters
     import middlewares
     filters.setup(dp)
@@ -16,8 +21,6 @@ async def on_startup(dp):
 
 
 if __name__ == '__main__':
-    from aiogram.utils.executor import start_webhook
-
     from handlers import dp
 
     start_webhook(
@@ -27,5 +30,5 @@ if __name__ == '__main__':
         skip_updates=True,
         host=WEBAPP_HOST,
         port=WEBAPP_PORT,
-        ssl_context=SSL_CERTIFICATE
+        ssl_context=ssl_context
     )

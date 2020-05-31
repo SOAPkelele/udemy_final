@@ -22,11 +22,13 @@ redis = {
 
 # webhook settings
 WEBHOOK_HOST = f"https://{ip}"
+WEBHOOK_PORT = 8443
 WEBHOOK_PATH = f"/bot/{BOT_TOKEN}"
-WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
+WEBHOOK_URL = f"{WEBHOOK_HOST}:{WEBHOOK_PORT}{WEBHOOK_PATH}"
 
 # webserver settings
-WEBAPP_HOST = 'localhost'  # or ip
-WEBAPP_PORT = 3001
+WEBAPP_HOST = '0.0.0.0'  # or ip
+WEBAPP_PORT = os.getenv("WEBAPP_PORT")
 
-SSL_CERTIFICATE = open("cert", "rb")
+WEBHOOK_SSL_CERT = "webhook_cert.pem"
+WEBHOOK_SSL_PRIV = "webhook_pkey.pem"
