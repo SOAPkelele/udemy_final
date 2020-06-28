@@ -36,7 +36,7 @@ async def catch_photo(message: Message):
     await message.photo[-1].download()
     await message.reply(
         "Фотография скачана\n"
-        "<pre>FILE ID = {message.photo[-1].file_id}</pre>")
+        f"<pre>FILE ID = {message.photo[-1].file_id}</pre>")
 
 
 @dp.message_handler(content_types=ContentType.ANY)
