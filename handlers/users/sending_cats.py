@@ -31,12 +31,16 @@ async def more_cats(message: types.Message):
     album = types.MediaGroup()
 
     # Прикрепляем фото и видео
+    photo_file_id = "AgACAgIAAxkBAAICcV6jF5kAARvDMn99PQuVe9fBg-TKcAACQ64xG0WQGEm4F3v9dsbAAg7Hwg8ABAEAAwIAA3kAA9c_BgABGQQ"
+    photo_url = "https://i.pinimg.com/originals/13/25/68/132568dbe8f3316aa56551dba527e7f7.jpg"
+    photo_bytes = InputFile("photos/cat.jpg")
+    video_file_id = "BAACAgIAAxkBAAICd16jHbPzMn9TCtF7dhv7xowgz4_ZAAI6BwACRZAYSXaxS0By-HwIGQQ"
     album.attach_photo(
-        photo="AgACAgIAAxkBAAICcV6jF5kAARvDMn99PQuVe9fBg-TKcAACQ64xG0WQGEm4F3v9dsbAAg7Hwg8ABAEAAwIAA3kAA9c_BgABGQQ",
+        photo=photo_file_id,
         caption="Прикольный котик")
-    album.attach_photo(photo="https://i.pinimg.com/originals/13/25/68/132568dbe8f3316aa56551dba527e7f7.jpg")
-    album.attach_photo(photo=InputFile("photos/cat.jpg"))
-    album.attach_video(video="BAACAgIAAxkBAAICd16jHbPzMn9TCtF7dhv7xowgz4_ZAAI6BwACRZAYSXaxS0By-HwIGQQ",
+    album.attach_photo(photo=photo_url)
+    album.attach_photo(photo=photo_bytes)
+    album.attach_video(video=video_file_id,
                        caption="Видео где котик запрыгивает на кровать")
 
     # Отправляем
