@@ -17,7 +17,6 @@ async def share_number(message: types.Message):
 @dp.message_handler(content_types=types.ContentType.CONTACT)
 async def get_contact(message: types.Message):
     contact = message.contact
-
     await message.answer(f"Спасибо, {contact.full_name}.\n"
                          f"Ваш номер {contact.phone_number} был получен и передан менеджеру. Ожидайте",
                          reply_markup=ReplyKeyboardRemove())
