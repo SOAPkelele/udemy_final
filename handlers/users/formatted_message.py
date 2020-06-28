@@ -11,12 +11,14 @@ html_text = "\n".join(
         hitalic("Бояться надо не смерти, а пустой жизни."),
         "",
         "Но мы сейчас не об этом. " + hstrikethrough("Что тебе нужно?"),
-        "Этот текст с HTML форматированием. Почитать об этом можно " + hlink("тут",
-                                                                             "https://core.telegram.org/bots/api#formatting-options"),
+        "Этот текст с HTML форматированием. "
+        "Почитать об этом можно " + hlink("тут",
+                                          "https://core.telegram.org/bots/api#formatting-options"),
         hunderline("Внимательно прочти и используй с умом!"),
         "",
         hcode("Пример использования - ниже:"),
-        "\n\n"]
+        "",
+        ""]
 )
 html_text += hcode(html_text)
 
