@@ -79,5 +79,5 @@ async def approve_payment(call: types.CallbackQuery, state: FSMContext):
         return
     else:
         await call.message.answer("Успешно оплачено")
-    await call.message.edit_reply_markup()
+    await call.message.delete_reply_markup()
     await state.finish()

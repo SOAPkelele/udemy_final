@@ -14,20 +14,23 @@ class AddressDetails:
                  total_sent: int,
                  balance: int,
                  unconfirmed_balance: int,
-                 unconfirmed_txrefs: list, **kwargs):
+                 unconfirmed_txrefs: list,
+                 txrefs: list,
+                 **kwargs):
         self.address = address
         self.total_received = total_received
         self.total_sent = total_sent
         self.balance = balance
         self.unconfirmed_balance = unconfirmed_balance
         self.unconfirmed_txrefs = unconfirmed_txrefs
-
-
-class NoPaymentFound(Exception):
-    pass
+        self.txrefs = txrefs
 
 
 class NotConfirmed(Exception):
+    pass
+
+
+class NoPaymentFound(Exception):
     pass
 
 
@@ -42,13 +45,16 @@ class Payment:
 
     def check_payment(self):
         details = bs.get_address_details(address=config.WALLET_BTC, api_key=config.BLOCKCYPHER_TOKEN)
-        ad = AddressDetails(**details)
-        for transaction in ad.unconfirmed_txrefs:
-            if transaction["value"] == self.amount:
-                if transaction["received"] > self.created:
-                    if transaction["confirmations"] > 0:
+        address_details = AddressDetails(**details)
+        for transaction in address_details.unconfirmed_txrefs:
+            if transaction.get('value') == self.amount:
+                if transaction.get('received') > self.created:
+                    if transaction.get('confirmations') > 0:
                         return True
                     else:
                         raise NotConfirmed
-        else:
-            raise NoPaymentFound
+        for transaction in address_details.txrefs:
+            if transaction.get('value') == self.amount:
+                if transaction.get('received') > self.created:
+                    return True
+        raise NoPaymentFound
