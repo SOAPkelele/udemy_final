@@ -1,3 +1,4 @@
+import logging
 from random import randint
 
 from aiogram import types
@@ -30,7 +31,7 @@ async def show_items(message: types.Message):
             caption=caption.format(
                 title=item.title,
                 description=item.description,
-                price=item.price
+                price=from_satoshis(item.price, "btc")
             ),
             reply_markup=buy_keyboard(item_id=item.id)
         )
