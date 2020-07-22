@@ -1,6 +1,6 @@
+from utils.set_bot_commands import set_default_commands
 from loader import db
 from utils.db_api import db_gino
-from utils.set_bot_commands import set_default_commands
 
 
 async def on_startup(dp):
@@ -16,10 +16,12 @@ async def on_startup(dp):
 
     print("Чистим базу")
     await db.gino.drop_all()
+
     print("Готово")
 
     print("Создаем таблицы")
     await db.gino.create_all()
+
     print("Готово")
     await on_startup_notify(dp)
     await set_default_commands(dp)

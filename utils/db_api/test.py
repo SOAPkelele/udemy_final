@@ -1,9 +1,8 @@
 import asyncio
-import utils.db_api.quick_commands as commands
-from utils.db_api.db_gino import db
-from data import config
 
-loop = asyncio.get_event_loop()
+from data import config
+from utils.db_api import quick_commands
+from utils.db_api.db_gino import db
 
 
 async def test():
@@ -12,18 +11,21 @@ async def test():
     await db.gino.create_all()
 
     print("Добавляем пользователей")
-    await commands.add_user(1, "One", "email")
-    await commands.add_user(2, "Vasya", "vv@gmail.com")
-    await commands.add_user(3, "1", "1")
-    await commands.add_user(4, "1", "1")
-    await commands.add_user(5, "John", "john@mail.com")
+    await quick_commands.add_user(1, "One", "email")
+    await quick_commands.add_user(2, "Vasya", "vv@gmail.com")
+    await quick_commands.add_user(3, "1", "1")
+    await quick_commands.add_user(4, "1", "1")
+    await quick_commands.add_user(5, "John", "john@mail.com")
     print("Готово")
 
-    users = await commands.select_all_users()
+    users = await quick_commands.select_all_users()
     print(f"Получил всех пользователей: {users}")
 
-    user = await commands.select_user(id=5)
+    count_users = await quick_commands.count_users()
+    print(f"Всего пользователей: {count_users}")
+
+    user = await quick_commands.select_user(id=5)
     print(f"Получил пользователя: {user}")
 
-
+loop = asyncio.get_event_loop()
 loop.run_until_complete(test())
