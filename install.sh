@@ -2,11 +2,11 @@
 # Устанавливаем supervisorctl
 apt-get update &&\
 apt-get install supervisor -y &&\
-# Создаем директорию telegrambot в /home
-mkdir -p /home/telegrambot &&\
+# Создаем директорию telegrambot в /home/ubuntu
+mkdir -p /home/ubuntu/telegrambot &&\
 # Перемещаем все что в текущей директории в эту папку
-mv  ./* /home/telegrambot &&\
-mv ./.env.dist /home/telegrambot/.env &&\
+mv  ./* /home/ubuntu/telegrambot &&\
+mv ./.env.dist /home/ubuntu/telegrambot/.env &&\
 # Заходим в эту папку
 cd /home/telegrambot &&\
 # Перемещаем файл конфига в папку супервайзера
