@@ -6,6 +6,7 @@ from loader import dp
 from states.test import Test
 
 
+# Сделаем фильтр на комманду /test, где не будет указано никакого состояния
 @dp.message_handler(Command("test"), state=None)
 async def enter_test(message: types.Message):
     await message.answer("Вы начали тестирование.\n"
@@ -28,6 +29,8 @@ async def answer_q1(message: types.Message, state: FSMContext):
     # state = dp.current_state(chat=message.chat.id, user=message.from_user.id)
 
     # Вариант 1 сохранения переменных - записываем через key=var
+    # Если у вас запись идет какого-то параметра (например email) то записывайте не answer,
+    # а email, чтобы потом было понятно что именно доставать
     await state.update_data(answer1=answer)
 
     # Вариант 2 - передаем как словарь
@@ -64,4 +67,3 @@ async def answer_q2(message: types.Message, state: FSMContext):
 
     # Вариант завершения 3 - без стирания данных в data
     # await state.reset_state(with_data=False)
-
