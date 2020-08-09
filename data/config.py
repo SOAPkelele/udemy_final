@@ -10,6 +10,7 @@ admins = [
 ]
 
 ip = os.getenv("ip")
+chatbase = os.getenv("CHATBASE")
 
 aiogram_redis = {
     'host': ip,
