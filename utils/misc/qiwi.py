@@ -2,7 +2,7 @@ import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 
-import pyqiwi
+import pyqiwi  # Библиотека называется qiwipy, но модуль pyqiwi!
 
 from data import config
 from data.config import QIWI_TOKEN, WALLET_QIWI

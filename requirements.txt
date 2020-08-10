@@ -1,4 +1,4 @@
-pyqiwi
+qiwipy
 pyqrcode
 pypng
 aiogram==2.7
