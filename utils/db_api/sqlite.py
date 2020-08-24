@@ -77,9 +77,6 @@ class Database:
         """
         return self.execute(sql, parameters=(email, id), commit=True)
 
-    def count_users(self):
-        return self.execute("SELECT COUNT(*) FROM Users", fetchone=True)
-
     def delete_users(self):
         self.execute("DELETE FROM Users WHERE TRUE", commit=True)
 
