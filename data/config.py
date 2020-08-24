@@ -14,6 +14,9 @@ admins = [
 
 ip = os.getenv("ip")
 
+db_host = ip  # Если вы запускаете базу не через докер!
+# db_host = "db"  # Если вы запускаете базу через докер и у вас в services стоит название базы db
+
 aiogram_redis = {
     'host': ip,
 }
@@ -23,4 +26,5 @@ redis = {
     'encoding': 'utf8'
 }
 
-POSTGRES_URI = f"postgresql://{PGUSER}:{PGPASSWORD}@{ip}/{DATABASE}"
+
+POSTGRES_URI = f"postgresql://{PGUSER}:{PGPASSWORD}@{db_host}/{DATABASE}"
