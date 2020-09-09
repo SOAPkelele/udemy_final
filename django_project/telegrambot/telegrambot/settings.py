@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-import config
+from data import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 
@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'usersmanage',
+    'django_project.telegrambot.usersmanage',
 ]
 
 MIDDLEWARE = [
@@ -53,7 +53,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'telegrambot.urls'
+ROOT_URLCONF = 'django_project.telegrambot.telegrambot.urls'
 
 TEMPLATES = [
     {
@@ -71,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'telegrambot.wsgi.application'
+WSGI_APPLICATION = 'django_project.telegrambot.telegrambot.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
@@ -82,7 +82,7 @@ DATABASES = {
         'NAME': config.DATABASE,
         'USER': config.PGUSER,
         'PASSWORD': config.PGPASSWORD,
-        'HOST': config.ip,
+        'HOST': config.DBHOST,
         'PORT': '5432',
     }
 }

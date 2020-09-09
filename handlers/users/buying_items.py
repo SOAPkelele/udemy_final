@@ -1,11 +1,12 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from asgiref.sync import sync_to_async
 
 from keyboards.inline.menu_keyboards import buy_item
 from loader import dp
-from utils.db_api.db_commands import select_user, get_item
-from utils.db_api.models import Purchase
+from utils.db_api.db_commands import select_user, get_item, add_item
+from django_project.telegrambot.usersmanage.models import Purchase
 
 
 @dp.callback_query_handler(buy_item.filter())
@@ -49,6 +50,6 @@ async def enter_phone(message: types.Message, state: FSMContext):
     phone_number = message.contact.phone_number
     async with state.proxy() as data:
         data["purchase"].phone_number = phone_number
-        await data["purchase"].create()
+        await sync_to_async(data["purchase"].save)()
     await message.answer("Покупка создана")
     await state.finish()

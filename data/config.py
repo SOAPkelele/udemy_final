@@ -8,6 +8,8 @@ BOT_TOKEN = str(os.getenv("BOT_TOKEN"))
 PGUSER = str(os.getenv("PGUSER"))
 PGPASSWORD = str(os.getenv("PGPASSWORD"))
 DATABASE = str(os.getenv("DATABASE"))
+DBHOST = str(os.getenv("DBHOST"))
+
 admins = [
     362089194
 ]
@@ -23,4 +25,4 @@ redis = {
     'encoding': 'utf8'
 }
 
-POSTGRES_URI = f"postgresql://{PGUSER}:{PGPASSWORD}@{ip}/{DATABASE}"
+POSTGRES_URI = f"postgresql://{PGUSER}:{PGPASSWORD}@{DBHOST}/{DATABASE}"

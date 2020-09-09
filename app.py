@@ -1,4 +1,8 @@
-from utils.db_api.database import create_db
+import os
+
+import django
+from django_project.telegrambot.telegrambot import settings
+
 from utils.set_bot_commands import set_default_commands
 
 
@@ -10,16 +14,22 @@ async def on_startup(dp):
 
     from utils.notify_admins import on_startup_notify
 
-    print("Создаем таблицы")
-    await create_db()
-    # await db.gino.create_all()
-
-    print("Готово")
     await on_startup_notify(dp)
     await set_default_commands(dp)
 
 
+def setup_django():
+    os.environ.setdefault(
+        "DJANGO_SETTINGS_MODULE",
+        "django_project.telegrambot.telegrambot.settings"
+    )
+    os.environ.update({'DJANGO_ALLOW_ASYNC_UNSAFE': "true"})
+    django.setup()
+
+
 if __name__ == '__main__':
+    setup_django()
+
     from aiogram import executor
     from handlers import dp
 

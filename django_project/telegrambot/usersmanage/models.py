@@ -68,7 +68,7 @@ class Purchase(TimedBaseModel):
     item_id = models.ForeignKey(Item, verbose_name="Идентификатор Товара", on_delete=models.CASCADE)
     amount = models.DecimalField(verbose_name="Стоимость", decimal_places=2, max_digits=8)
     quantity = models.IntegerField(verbose_name="Количество")
-    purchase_time = models.DateTimeField(verbose_name="Время покупки", auto_created=True)
+    purchase_time = models.DateTimeField(verbose_name="Время покупки", auto_now_add=True)
     shipping_address = JSONField(verbose_name="Адрес Доставки", null=True)
     phone_number = models.CharField(verbose_name="Номер телефона", max_length=50)
     email = models.CharField(verbose_name="Email", max_length=100, null=True)
