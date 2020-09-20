@@ -25,5 +25,5 @@ async def test():
 
 
 loop = asyncio.get_event_loop()
-db = Database(loop)
+db = loop.run_until_complete(Database.create())
 loop.run_until_complete(test())
