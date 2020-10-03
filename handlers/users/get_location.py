@@ -2,7 +2,7 @@ from aiogram import types
 from aiogram.dispatcher.filters import Command
 from keyboards.default import location_button
 from utils.misc.calc_distance import choose_shortest
-
+from aiogram.types import ReplyKeyboardRemove
 from loader import dp, bot
 
 
@@ -26,7 +26,7 @@ async def get_contact(message: types.Message):
     await message.answer(f"Спасибо. \n"
                          f"Latitude = {latitude}\n"
                          f"Longitude = {longitude}\n\n"
-                         f"{text}", disable_web_page_preview=True)
+                         f"{text}", disable_web_page_preview=True, reply_markup=ReplyKeyboardRemove())
 
     for shop_name, distance, url, shop_location in closest_shops:
         await message.answer_location(latitude=shop_location["lat"],
