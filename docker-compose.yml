@@ -13,7 +13,7 @@ services:
 #    networks:
 #      - botnet
 #    volumes:
-#      - ./pgdata:/var/lib/postgresql/data
+#      - ./postgres:/var/lib/postgresql
 #
   tgbot:
     container_name: bot
